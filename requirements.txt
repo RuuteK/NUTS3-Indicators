@@ -1,0 +1,9 @@
+streamlit
+pandas
+folium
+streamlit-folium
+branca
+openpyxl
+selenium
+webdriver-manager
+pillow
