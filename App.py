@@ -546,45 +546,30 @@ else:
     fname_base = f"map_{sel_indicator}_{sel_year}" + (
         f"_{'_'.join(sel_countries)}" if sel_countries else ""
     )
-    
-    if RUNNING_IN_CLOUD:
-        # W chmurze: tylko HTML, bez próby użycia Selenium
-        col_html, _ = st.columns(2)
-    
-        with col_html:
-            st.download_button(
-                "Pobierz mapę (HTML)",
-                data=html_bytes,
-                file_name=f"{fname_base}.html",
-                mime="text/html",
-            )
-    
-        st.info("Eksport do PNG jest dostępny tylko w wersji desktopowej aplikacji.")
-    else:
-        # Lokalnie: HTML + PNG
-        col_html, col_png = st.columns(2)
-    
-        with col_html:
-            st.download_button(
-                "Pobierz mapę (HTML)",
-                data=html_bytes,
-                file_name=f"{fname_base}.html",
-                mime="text/html",
-            )
-    
-        img_png, err = folium_to_image_bytes(m_export, width=1400, height=900)
-    
-        with col_png:
-            if err:
-                st.info(err)
-            else:
-                st.download_button(
-                    "Pobierz mapę (PNG)",
-                    data=img_png,
-                    file_name=f"{fname_base}.png",
-                    mime="image/png",
-                )
 
+    # Przyciski obok siebie
+    col_html, col_png = st.columns(2)
+
+    with col_html:
+        st.download_button(
+            "Pobierz mapę (HTML)",
+            data=html_bytes,
+            file_name=f"{fname_base}.html",
+            mime="text/html",
+        )
+
+    img_png, err = folium_to_image_bytes(m_export, width=1400, height=900)
+
+    with col_png:
+        if err:
+            st.info(err)
+        else:
+            st.download_button(
+                "Pobierz mapę (PNG)",
+                data=img_png,
+                file_name=f"{fname_base}.png",
+                mime="image/png",
+            )
 
 # -------------------- Ranking + XLSX --------------------
 st.subheader(f"Ranking regionów NUTS3 wg wartości wskaźnika: {sel_indicator} — {sel_year}")
@@ -634,4 +619,3 @@ st.download_button(
     ),
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 )
-
